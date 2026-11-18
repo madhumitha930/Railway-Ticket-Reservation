@@ -33,15 +33,18 @@ pipeline {
  }
  }
  stage('Package') {
- steps {
- echo 'Creating application package'
- bat '''
- if exist railway-reservation.zip del railway-reservation.zip
- powershell -NoProfile -Command "Compress-Archive -Path 
-index.html,style.css,script.js -DestinationPath railway-reservation.zip"
- '''
- }
- }
+    steps {
+        powershell '''
+            $files = @(
+                "index.html",
+                "style.css",
+                "script.js"
+            )
+
+            Compress-Archive -Path $files -DestinationPath "railway-reservation.zip" -Force
+        '''
+    }
+}
  }
  post {
  success {
